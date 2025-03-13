@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Répondeur Aléatoire</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        #response {
+            margin-top: 20px;
+            font-weight: bold;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ask William !</h1>
+    <input type="text" id="question" placeholder="Votre question ici...">
+    <button onclick="generateResponse()">Demander</button>
+    <button onclick="startListening()">🎤 Parler</button>
+    <p id="response"></p>
+
+    <script>
+        function generateResponse() {
+            const responses = [
+                "Tu ne fais que me comparer et tu ne me fais que des reproches",
+                "ouiii je sais, je vais te laisser j’ai du travail",
+                "Biensur que je travaille, je ne fais que ça tout le temps",
+                "arrêtez de me casser les couilles, je te préviens je vais raccrocher",
+                "mais vous ne parlez que de ça ??",
+                "Oui chef !",
+                "J'ai pas le temps là parce que ... ohhh un cybertruck !"
+            ];
+            
+            const randomIndex = Math.floor(Math.random() * responses.length);
+            const selectedResponse = responses[randomIndex];
+            document.getElementById("response").textContent = selectedResponse;
+            speakResponse(selectedResponse);
+        }
+
+        function startListening() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "fr-FR";
+            recognition.start();
+            
+            recognition.onresult = function(event) {
+                const question = event.results[0][0].transcript;
+                document.getElementById("question").value = question;
+                generateResponse();
+            };
+        }
+
+        function speakResponse(text) {
+            const speech = new SpeechSynthesisUtterance(text);
+            speech.lang = "fr-FR";
+            window.speechSynthesis.speak(speech);
+        }
+    </script>
+</body>
+</html>
